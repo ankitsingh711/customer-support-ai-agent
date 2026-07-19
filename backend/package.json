@@ -17,6 +17,7 @@
     "@prisma/client": "^5.22.0",
     "@qdrant/js-client-rest": "^1.12.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
     "express": "^4.21.1",
     "pino": "^9.5.0",
     "uuid": "^11.0.3",

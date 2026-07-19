@@ -70,6 +70,15 @@ chatRouter.get("/stream", async (req, res, next) => {
     res.end();
   } catch (err) {
     logger.error({ err }, "chat stream failed");
+    if (res.headersSent) {
+      // Named "stream_error", not "error" — EventSource treats a server-sent
+      // event literally named "error" as equivalent to a connection failure.
+      res.write(
+        `event: stream_error\ndata: ${JSON.stringify({ message: "Failed to generate a response." })}\n\n`
+      );
+      res.end();
+      return;
+    }
     next(err);
   }
 });

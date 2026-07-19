@@ -59,6 +59,10 @@ export function streamChat(
     handlers.onDone?.();
     source.close();
   });
+  source.addEventListener("stream_error", (event) => {
+    handlers.onError?.(event);
+    source.close();
+  });
   source.onerror = (err) => {
     handlers.onError?.(err);
     source.close();
