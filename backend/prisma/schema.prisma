@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ConversationStatus {
+  ACTIVE
+  AUTO_RESOLVED
+  ESCALATED
+  CLOSED
+}
+
+enum MessageRole {
+  CUSTOMER
+  ASSISTANT
+  AGENT
+  SYSTEM
+}
+
+model Customer {
+  id            String         @id @default(uuid())
+  email         String?        @unique
+  displayName   String?
+  createdAt     DateTime       @default(now())
+  conversations Conversation[]
+}
+
+model Conversation {
+  id              String             @id @default(uuid())
+  customer        Customer?          @relation(fields: [customerId], references: [id])
+  customerId      String?
+  status          ConversationStatus @default(ACTIVE)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  messages        Message[]
+  escalation      Escalation?
+  analyticsEvents AnalyticsEvent[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  role           MessageRole
+  content        String
+  citations      Json?
+  confidence     Float?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+}
+
+model KbDocument {
+  id         String   @id @default(uuid())
+  title      String
+  sourcePath String
+  chunkCount Int      @default(0)
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+}
+
+model Escalation {
+  id             String       @id @default(uuid())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String       @unique
+  reason         String
+  resolvedAt     DateTime?
+  createdAt      DateTime     @default(now())
+}
+
+model AnalyticsEvent {
+  id             String        @id @default(uuid())
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  conversationId String?
+  type           String
+  latencyMs      Int?
+  confidence     Float?
+  escalated      Boolean       @default(false)
+  metadata       Json?
+  createdAt      DateTime      @default(now())
+
+  @@index([type])
+  @@index([createdAt])
+}
