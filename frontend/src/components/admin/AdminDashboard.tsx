@@ -74,7 +74,8 @@ export default function AdminDashboard() {
 
   async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
     const sourcePath = String(form.get("sourcePath") ?? "");
     const content = String(form.get("content") ?? "");
     if (!sourcePath || !content) return;
@@ -83,7 +84,7 @@ export default function AdminDashboard() {
     try {
       await adminApi.uploadDocument(token, sourcePath, content);
       setUploadState("saved");
-      e.currentTarget.reset();
+      formEl.reset();
     } catch {
       setUploadState("error");
     }
