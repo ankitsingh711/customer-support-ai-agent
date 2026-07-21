@@ -32,7 +32,7 @@ services:
       - key: VOYAGE_MODEL
         value: voyage-3-lite
       - key: ADMIN_API_TOKEN
-        generateValue: true
+        sync: false
       - key: RETRIEVAL_TOP_K
         value: 5
       - key: CONFIDENCE_ESCALATION_THRESHOLD
