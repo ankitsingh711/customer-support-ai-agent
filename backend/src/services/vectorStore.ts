@@ -2,7 +2,10 @@ import { QdrantClient } from "@qdrant/js-client-rest";
 import { v4 as uuidv4 } from "uuid";
 import { env } from "../config/env.js";
 
-const client = new QdrantClient({ url: env.QDRANT_URL });
+const client = new QdrantClient({
+  url: env.QDRANT_URL,
+  apiKey: env.QDRANT_API_KEY,
+});
 
 const VECTOR_SIZE = 512; // voyage-3-lite output dimension
 

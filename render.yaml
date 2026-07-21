@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: csa-backend-ankit
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: CORS_ORIGIN
+        value: https://csa-frontend-ankit.onrender.com
+      # Secrets below are prompted for in the Render dashboard when this
+      # Blueprint is created — never stored in this file or in git.
+      - key: DATABASE_URL
+        sync: false
+      - key: QDRANT_URL
+        value: https://ebc5ec31-0ed9-4d7d-818c-ff364e847bd5.sa-east-1-0.aws.cloud.qdrant.io
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: QDRANT_COLLECTION
+        value: kb_chunks
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CLAUDE_MODEL
+        value: claude-sonnet-5
+      - key: VOYAGE_API_KEY
+        sync: false
+      - key: VOYAGE_MODEL
+        value: voyage-3-lite
+      - key: ADMIN_API_TOKEN
+        generateValue: true
+      - key: RETRIEVAL_TOP_K
+        value: 5
+      - key: CONFIDENCE_ESCALATION_THRESHOLD
+        value: 0.55
+
+  - type: web
+    name: csa-frontend-ankit
+    runtime: docker
+    plan: free
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: NEXT_PUBLIC_API_BASE_URL
+        value: https://csa-backend-ankit.onrender.com

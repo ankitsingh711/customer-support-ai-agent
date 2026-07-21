@@ -25,6 +25,7 @@ const envSchema = z.object({
   VOYAGE_MODEL: z.string().default("voyage-3-lite"),
 
   QDRANT_URL: z.string().default("http://localhost:6333"),
+  QDRANT_API_KEY: z.string().optional(),
   QDRANT_COLLECTION: z.string().default("kb_chunks"),
 
   ADMIN_API_TOKEN: z.string().min(1, "ADMIN_API_TOKEN is required"),
